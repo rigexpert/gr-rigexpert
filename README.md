@@ -14,7 +14,7 @@ This is the Fobos SDR receiver Complex IQ signal source block for GnuRadio. Full
 ## How to build and install
 
 git clone [this repo]<br />
-cd gr-rigespert<br />
+cd gr-rigexpert<br />
 sudo cp fobos-sdr.rules /etc/udev/rules.d/00-fobos-sdr.rules<br />
 sudo udevadm control --reload-rules<br />
 sudo udevadm trigger<br />

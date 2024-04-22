@@ -1,0 +1,67 @@
+id: RigExpert_fobos_sdr
+label: 'Fobos SDR source'
+category: '[RigExpert]'
+flags: throttle
+
+templates:
+  imports: from gnuradio import RigExpert
+  make: RigExpert.fobos_sdr(${index}, ${frequency}, ${samplerate}, ${lna_gain}, ${vga_gain}, ${direct_sampling}, ${clock_source})
+
+parameters:
+- id: index
+  label: 'Device #'
+  dtype: int
+  default: 0
+
+- id: frequency
+  label: 'Frequency (MHz)'
+  dtype: real
+  default: 100.0
+
+- id: samplerate
+  label: 'Sample rate (MHz)'
+  dtype: real
+  default: 10.0
+  options: [ 50.0, 40.0, 32.0, 25.0, 20.0, 16.0, 12.5, 10.0, 8.0, 6.4, 6.25, 5.0, 4.0]
+
+- id: lna_gain
+  label: 'LNA gain'
+  dtype: int
+  default: 0
+  options: [ 0, 1, 2, 3]
+  option_labels: [none, 0 dB, 15 dB, 30 dB]
+
+- id: vga_gain
+  label: 'VGA gain'
+  dtype: int
+  default: 0
+  options: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+  option_labels: [ 0 dB, 2 dB, 4 dB, 6 dB, 8 dB, 10 dB, 12 dB, 14 dB, 16 dB, 18 dB, 20 dB, 22 dB, 24 dB, 26 dB, 28 dB, 30 dB]
+
+- id: direct_sampling 
+  label: 'Sampling'
+  dtype: int
+  default: 0
+  options: [0, 1]
+  option_labels: [ "RF input", "HF1/2 direct"]
+
+
+- id: clock_source
+  label: 'Clock source'
+  dtype: int
+  default: 0
+  options: [0, 1]
+  option_labels: [ "Internal", "External 10 MHz"]
+
+
+inputs:
+# none
+
+outputs:
+- label: out0
+  domain: stream
+  dtype: complex
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

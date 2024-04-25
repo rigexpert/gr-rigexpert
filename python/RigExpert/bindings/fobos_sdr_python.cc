@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fobos_sdr.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(00853f3854fef7fcc99f0d6507b0d0be)                     */
+/* BINDTOOL_HEADER_FILE_HASH(c8ed7199d3afc22e42710c396e9f3660)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -55,6 +55,20 @@ void bind_fobos_sdr(py::module& m)
         .def("set_frequency",&fobos_sdr::set_frequency,       
             py::arg("freq"),
             D(fobos_sdr,set_frequency)
+        )
+
+
+        
+        .def("set_lna_gain",&fobos_sdr::set_lna_gain,       
+            py::arg("lna_g"),
+            D(fobos_sdr,set_lna_gain)
+        )
+
+
+        
+        .def("set_vga_gain",&fobos_sdr::set_vga_gain,       
+            py::arg("vga_g"),
+            D(fobos_sdr,set_vga_gain)
         )
 
         ;

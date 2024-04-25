@@ -8,6 +8,8 @@ templates:
   make: RigExpert.fobos_sdr(${index}, ${frequency}, ${samplerate}, ${lna_gain}, ${vga_gain}, ${direct_sampling}, ${clock_source})
   callbacks:
     - set_frequency(${frequency})
+    - set_lna_gain(${lna_gain})
+    - set_vga_gain(${vga_gain})
 
 parameters:
 - id: index

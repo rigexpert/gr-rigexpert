@@ -62,6 +62,8 @@ namespace gr
                      gr_vector_void_star& output_items);
 
             void set_frequency(double freq);
+            void set_lna_gain(int lna_g);
+            void set_vga_gain(int vga_g);
         };
 
     } // namespace RigExpert

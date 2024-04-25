@@ -6,6 +6,8 @@ flags: throttle
 templates:
   imports: from gnuradio import RigExpert
   make: RigExpert.fobos_sdr(${index}, ${frequency}, ${samplerate}, ${lna_gain}, ${vga_gain}, ${direct_sampling}, ${clock_source})
+  callbacks:
+    - set_frequency(${frequency})
 
 parameters:
 - id: index

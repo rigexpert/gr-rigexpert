@@ -222,8 +222,8 @@ namespace gr
             else
             {
                 _this->_overruns_count++;
-                printf("#");
-                //printf("Err: OVERRUN!!!");
+                // printf("#");
+                //printf("OVERRUN!!!");
             }
             _this->_rx_cond.notify_one();
         }
@@ -242,6 +242,11 @@ namespace gr
             _this->_running = false;
         }
         //======================================================================
+        void fobos_sdr_impl::set_frequency(double freq) {
+            double actual;
+            fobos_rx_set_frequency(_dev, freq * 1e6, &actual);
+            printf("\nSetting freq %f, actual %f", freq, actual);
+        }
 
     } /* namespace RigExpert */
 } /* namespace gr */

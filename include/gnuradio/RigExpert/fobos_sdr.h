@@ -41,6 +41,11 @@ namespace gr
                                 int vga_gain = 0,
                                 int direct_sampling = 0,
                                 int clock_source = 0);
+
+            /**
+             * @brief Callback for setting frequency
+             */
+            virtual void set_frequency(double freq) = 0;
         };
 
     } // namespace RigExpert

@@ -19,9 +19,15 @@
  static const char *__doc_gr_RigExpert_fobos_sdr = R"doc()doc";
 
 
- static const char *__doc_gr_RigExpert_fobos_sdr_fobos_sdr = R"doc()doc";
+ static const char *__doc_gr_RigExpert_fobos_sdr_fobos_sdr_0 = R"doc()doc";
+
+
+ static const char *__doc_gr_RigExpert_fobos_sdr_fobos_sdr_1 = R"doc()doc";
 
 
  static const char *__doc_gr_RigExpert_fobos_sdr_make = R"doc()doc";
+
+
+ static const char *__doc_gr_RigExpert_fobos_sdr_set_frequency = R"doc()doc";
 
   

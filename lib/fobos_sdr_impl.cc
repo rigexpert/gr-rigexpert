@@ -222,8 +222,8 @@ namespace gr
             else
             {
                 _this->_overruns_count++;
-                printf("#");
-                //printf("Err: OVERRUN!!!");
+                // printf("#");
+                //printf("OVERRUN!!!");
             }
             _this->_rx_cond.notify_one();
         }
@@ -242,6 +242,27 @@ namespace gr
             _this->_running = false;
         }
         //======================================================================
+        void fobos_sdr_impl::set_frequency(double freq)\
+        {
+            double actual;
+            int res = fobos_rx_set_frequency(_dev, freq * 1e6, &actual);
+            printf("Setting freq %f MHz, actual %f MHz: %s\n",
+                    freq, actual, res == 0 ? "OK" : "NO OK");
+        }
+
+        void fobos_sdr_impl::set_lna_gain(int lna_g)
+        {
+            int res = fobos_rx_set_lna_gain(_dev, lna_g);
+            printf("Setting LNA gain to %d dB: %s\n",
+                    lna_g * 15, res == 0 ? "OK" : "NO OK");
+        }
+
+        void fobos_sdr_impl::set_vga_gain(int vga_g)
+        {
+            int res = fobos_rx_set_vga_gain(_dev, vga_g);
+            printf("Setting VGA gain to %d dB: %s\n",
+                    vga_g * 2, res == 0 ? "OK" : "NO OK");
+        }
 
     } /* namespace RigExpert */
 } /* namespace gr */

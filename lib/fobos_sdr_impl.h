@@ -11,6 +11,7 @@
 //  2024.03.21
 //  2024.04.08
 //  2024.04.21
+//  2024.04.26
 //==============================================================================
 
 #ifndef INCLUDED_RIGEXPERT_FOBOS_SDR_IMPL_H
@@ -61,12 +62,17 @@ namespace gr
                      gr_vector_const_void_star& input_items,
                      gr_vector_void_star& output_items);
 
-            void set_frequency(double freq);
-            void set_lna_gain(int lna_g);
-            void set_vga_gain(int vga_g);
+            void set_frequency(double frequency_mhz);
+            void set_samplerate(double samplerate_mhz);
+            void set_lna_gain(int lna_gain);
+            void set_vga_gain(int vga_gain);
+            void set_direct_sampling(int direct_sampling);
+            void set_clock_source(int clock_source);
         };
 
     } // namespace RigExpert
 } // namespace gr
 
 #endif /* INCLUDED_RIGEXPERT_FOBOS_SDR_IMPL_H */
+
+//==============================================================================

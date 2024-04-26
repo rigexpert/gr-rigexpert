@@ -11,11 +11,11 @@
 //  2024.03.21
 //  2024.04.08
 //  2024.04.21
+//  2024.04.26
 //==============================================================================
 #include <math.h>
 #include "fobos_sdr_impl.h"
 #include <gnuradio/io_signature.h>
-
 
 namespace gr
 {
@@ -31,6 +31,7 @@ namespace gr
                                         int direct_sampling,
                                         int clock_source)
         {
+            printf("make (%d, %f, %f, %d, %d, %d, %d)\n", index, frequency_mhz, samplerate_mhz, lna_gain, vga_gain, direct_sampling, clock_source);
             return gnuradio::make_block_sptr<fobos_sdr_impl>(
                                         index, 
                                         frequency_mhz, 
@@ -128,6 +129,10 @@ namespace gr
                 {
                     printf("could not open device! err (%i)\n", result);
                 }
+            }
+            else
+            {
+                printf("could not find any fobos_sdr compatible device!\n");
             }
         }
         //======================================================================
@@ -242,27 +247,43 @@ namespace gr
             _this->_running = false;
         }
         //======================================================================
-        void fobos_sdr_impl::set_frequency(double freq)\
+        void fobos_sdr_impl::set_frequency(double frequency_mhz)
         {
             double actual;
-            int res = fobos_rx_set_frequency(_dev, freq * 1e6, &actual);
-            printf("Setting freq %f MHz, actual %f MHz: %s\n",
-                    freq, actual, res == 0 ? "OK" : "NO OK");
+            int res = fobos_rx_set_frequency(_dev, frequency_mhz * 1e6, &actual);
+            printf("Setting freq %f MHz, actual %f MHz: %s\n", frequency_mhz, actual / 1E6, res == 0 ? "OK" : "ERR");
         }
-
-        void fobos_sdr_impl::set_lna_gain(int lna_g)
+        //======================================================================
+        void fobos_sdr_impl::set_samplerate(double samplerate_mhz)
         {
-            int res = fobos_rx_set_lna_gain(_dev, lna_g);
-            printf("Setting LNA gain to %d dB: %s\n",
-                    lna_g * 15, res == 0 ? "OK" : "NO OK");
+            double actual;
+            int res = fobos_rx_set_samplerate(_dev, samplerate_mhz * 1e6, &actual);
+            printf("Setting sample rate %f MHz, actual %f MHz: %s\n", samplerate_mhz, actual / 1E6, res == 0 ? "OK" : "ERR");
         }
-
-        void fobos_sdr_impl::set_vga_gain(int vga_g)
+        //======================================================================
+        void fobos_sdr_impl::set_lna_gain(int lna_gain)
         {
-            int res = fobos_rx_set_vga_gain(_dev, vga_g);
-            printf("Setting VGA gain to %d dB: %s\n",
-                    vga_g * 2, res == 0 ? "OK" : "NO OK");
+            int res = fobos_rx_set_lna_gain(_dev, lna_gain);
+            printf("Setting LNA gain to #%d: %s\n", lna_gain, res == 0 ? "OK" : "ERR");
         }
-
+        //======================================================================
+        void fobos_sdr_impl::set_vga_gain(int vga_gain)
+        {
+            int res = fobos_rx_set_vga_gain(_dev, vga_gain);
+            printf("Setting VGA gain to #%d: %s\n",  vga_gain, res == 0 ? "OK" : "ERR");
+        }
+        //======================================================================
+        void fobos_sdr_impl::set_direct_sampling(int direct_sampling)
+        {
+            int res = fobos_rx_set_direct_sampling(_dev, direct_sampling);
+            printf("Setting direct sampling mode to %d: %s\n",  direct_sampling, res == 0 ? "OK" : "ERR");
+        }
+        //======================================================================
+        void fobos_sdr_impl::set_clock_source(int clock_source)
+        {
+            int res = fobos_rx_set_clk_source(_dev, clock_source);
+            printf("Setting clock source to %s: %s\n",  clock_source == 0 ? "internal" : "external", res == 0 ? "OK" : "ERR");
+        }
+        //======================================================================
     } /* namespace RigExpert */
 } /* namespace gr */

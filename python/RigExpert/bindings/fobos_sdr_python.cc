@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(fobos_sdr.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(c8ed7199d3afc22e42710c396e9f3660)                     */
+/* BINDTOOL_HEADER_FILE_HASH(f06b7121ccf4e00c9fa9af4432643237)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -38,8 +38,8 @@ void bind_fobos_sdr(py::module& m)
 
         .def(py::init(&fobos_sdr::make),
            py::arg("index") = 0,
-           py::arg("frequency") = 1.0E+8,
-           py::arg("samplerate") = 1.0E+7,
+           py::arg("frequency") = 100.0,
+           py::arg("samplerate") = 10.0,
            py::arg("lna_gain") = 0,
            py::arg("vga_gain") = 0,
            py::arg("direct_sampling") = 0,
@@ -47,30 +47,34 @@ void bind_fobos_sdr(py::module& m)
            D(fobos_sdr,make)
         )
         
-
-
-
-
-        
         .def("set_frequency",&fobos_sdr::set_frequency,       
-            py::arg("freq"),
+            py::arg("frequency"),
             D(fobos_sdr,set_frequency)
         )
+       
+        .def("set_samplerate",&fobos_sdr::set_samplerate,       
+            py::arg("samplerate"),
+            D(fobos_sdr,set_samplerate)
+        )
 
-
-        
         .def("set_lna_gain",&fobos_sdr::set_lna_gain,       
-            py::arg("lna_g"),
+            py::arg("lna_gain"),
             D(fobos_sdr,set_lna_gain)
         )
 
-
-        
         .def("set_vga_gain",&fobos_sdr::set_vga_gain,       
-            py::arg("vga_g"),
+            py::arg("vga_gain"),
             D(fobos_sdr,set_vga_gain)
         )
+        .def("set_direct_sampling",&fobos_sdr::set_direct_sampling,       
+            py::arg("direct_sampling"),
+            D(fobos_sdr,set_direct_sampling)
+        )
 
+        .def("set_clock_source",&fobos_sdr::set_clock_source,       
+            py::arg("clock_source"),
+            D(fobos_sdr,set_clock_source)
+        )        
         ;
 
 

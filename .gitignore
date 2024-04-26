@@ -1,1 +1,3 @@
 build/
+docs/doxygen/doxyxml/__pycache__/
+docs/doxygen/doxyxml/generated/__pycache__/

@@ -25,6 +25,13 @@ make<br />
 sudo make install<br />
 sudo ldconfig<br />
 
+## how to update md5 (in build **directory**)
+
+- run md5sum ../include/gnuradio/RigExpert/fobos_sdr.h > sha.txt
+- copy md5 value (32 hex chars)
+- open ../python/RigExpert/bindings/fobos_sdr_python.cc
+- replace pevious /* BINDTOOL_HEADER_FILE_HASH(f06b7121ccf4e00c9fa9af4432643237)                     */
+
 ## How to use
 
 Nothing special.

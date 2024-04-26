@@ -31,9 +31,17 @@
  static const char *__doc_gr_RigExpert_fobos_sdr_set_frequency = R"doc()doc";
 
 
+ static const char *__doc_gr_RigExpert_fobos_sdr_set_samplerate = R"doc()doc";
+
+
  static const char *__doc_gr_RigExpert_fobos_sdr_set_lna_gain = R"doc()doc";
 
 
  static const char *__doc_gr_RigExpert_fobos_sdr_set_vga_gain = R"doc()doc";
 
   
+ static const char *__doc_gr_RigExpert_fobos_sdr_set_direct_sampling = R"doc()doc";
+
+
+static const char *__doc_gr_RigExpert_fobos_sdr_set_clock_source = R"doc()doc";
+

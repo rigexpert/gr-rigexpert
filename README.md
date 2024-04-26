@@ -32,6 +32,10 @@ sudo ldconfig<br />
 - open ../python/RigExpert/bindings/fobos_sdr_python.cc
 - replace pevious /* BINDTOOL_HEADER_FILE_HASH(f06b7121ccf4e00c9fa9af4432643237)                     */
 
+or just
+
+$ gr_modtool bind -u <module_name>
+
 ## How to use
 
 Nothing special.

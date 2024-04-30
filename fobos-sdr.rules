@@ -16,5 +16,5 @@
 #
 
 # original Fobos SDR
-ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="132e", MODE="0660", GROUP="plugdev"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="132e", MODE="0660", TAG+="uaccess"
 

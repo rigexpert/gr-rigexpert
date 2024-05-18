@@ -13,6 +13,7 @@
 //==============================================================================
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <limits.h>
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -68,6 +69,8 @@
 #ifndef LIBUSB_CALL
 #define LIBUSB_CALL
 #endif
+//==============================================================================
+static const float SAMPLE_NORM = (1.0 / (float)(SHRT_MAX >> 2)); // 14 bit ADC
 //==============================================================================
 enum fobos_async_status
 {
@@ -841,8 +844,8 @@ int fobos_rx_open(struct fobos_dev_t ** out_dev, uint32_t index)
                 *out_dev = dev;
                 //======================================================================
                 dev->dev_gpo = 0;
-                dev->rx_scale_re = 1.0f / 32768.0f;
-                dev->rx_scale_im = 1.0f / 32768.0f;
+                dev->rx_scale_re = SAMPLE_NORM;
+                dev->rx_scale_im = SAMPLE_NORM;
                 dev->rx_dc_re = 0.25f;
                 dev->rx_dc_im = 0.25f;
                 if (fobos_check(dev) == 0)
@@ -1429,8 +1432,8 @@ void fobos_rx_proceed_rx_buff(struct fobos_dev_t * dev, void * data, size_t size
     float scale_im = dev->rx_scale_im;
     if (dev->rx_direct_sampling)
     {
-        scale_re = 1.0f / 32786.0f;
-        scale_im = 1.0f / 32786.0f;
+        scale_re = SAMPLE_NORM;
+        scale_im = SAMPLE_NORM;
     }
     float k = 0.001f;
     float dc_re = dev->rx_dc_re;
@@ -1547,7 +1550,7 @@ void fobos_rx_proceed_calibration(struct fobos_dev_t * dev, void * data, uint32_
     {
         avg_abs_re /= (double)complex_samples_count;
         avg_abs_im /= (double)complex_samples_count;
-        float scale_re = 1.0f / 32786.0f;
+        float scale_re = SAMPLE_NORM;
         float scale_im = scale_re * avg_abs_re / avg_abs_im;
 #ifdef FOBOS_PRINT_DEBUG
         printf_internal("[%d] im/re scale = %f\n", dev->rx_calibration_pos, scale_im / scale_re);
@@ -1777,7 +1780,7 @@ static void LIBUSB_CALL _libusb_callback(struct libusb_transfer *transfer)
         if (transfer->actual_length == (int)dev->transfer_buf_size)
         {
             dev->rx_buff_counter++;
-            if ((dev->rx_calibration_state == 1) && (dev->rx_calibration_pos < 4))
+            if ((dev->rx_calibration_state == 1))
             {
                 fobos_rx_proceed_calibration(dev, transfer->buffer, transfer->actual_length);
                 dev->rx_calibration_pos++;

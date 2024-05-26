@@ -126,6 +126,14 @@ struct fobos_dev_t
     uint16_t rffc500x_registers_remote[31];
 };
 //==============================================================================
+inline int16_t to_int16(int16_t value)
+{
+    int16_t result = value & (int16_t)0x3FFF;
+    result ^= (int16_t)(1<<13);
+    result <<= (int16_t)2;
+    return result >> (int16_t)2;
+}
+//==============================================================================
 char * to_bin(uint16_t s16, char * str)
 {
     for (uint16_t i = 0; i < 16; i++)
@@ -846,8 +854,8 @@ int fobos_rx_open(struct fobos_dev_t ** out_dev, uint32_t index)
                 dev->dev_gpo = 0;
                 dev->rx_scale_re = SAMPLE_NORM;
                 dev->rx_scale_im = SAMPLE_NORM;
-                dev->rx_dc_re = 0.25f;
-                dev->rx_dc_im = 0.25f;
+                dev->rx_dc_re = 0.f;
+                dev->rx_dc_im = 0.f;
                 if (fobos_check(dev) == 0)
                 {
                     bitset(dev->dev_gpo, FOBOS_DEV_CLKSEL);
@@ -1451,41 +1459,41 @@ void fobos_rx_proceed_rx_buff(struct fobos_dev_t * dev, void * data, size_t size
     for (size_t i = 0; i < chunks_count; i++)
     {
         // 0
-        sample = (psample[0] & 0x3FFF) * scale_re;
+        sample = to_int16(psample[0]) * scale_re;
         dc_re += k * (sample - dc_re);
         dst_re[0] = sample - dc_re;
 
-        sample = (psample[1] & 0x3FFF) * scale_im;
+        sample = to_int16(psample[1]) * scale_im;
         dc_im += k * (sample - dc_im);
         dst_im[0] = sample - dc_im;
 
         // 1
-        dst_re[2] = (psample[2] & 0x3FFF) * scale_re - dc_re;
-        dst_im[2] = (psample[3] & 0x3FFF) * scale_im - dc_im;
+        dst_re[2] = to_int16(psample[2]) * scale_re - dc_re;
+        dst_im[2] = to_int16(psample[3]) * scale_im - dc_im;
 
         // 2
-        dst_re[4] = (psample[4] & 0x3FFF) * scale_re - dc_re;
-        dst_im[4] = (psample[5] & 0x3FFF) * scale_im - dc_im;
+        dst_re[4] = to_int16(psample[4]) * scale_re - dc_re;
+        dst_im[4] = to_int16(psample[5]) * scale_im - dc_im;
 
         // 3
-        dst_re[6] = (psample[6] & 0x3FFF) * scale_re - dc_re;
-        dst_im[6] = (psample[7] & 0x3FFF) * scale_im - dc_im;
+        dst_re[6] = to_int16(psample[6]) * scale_re - dc_re;
+        dst_im[6] = to_int16(psample[7]) * scale_im - dc_im;
 
         // 4
-        dst_re[8] = (psample[8] & 0x3FFF) * scale_re - dc_re;
-        dst_im[8] = (psample[9] & 0x3FFF) * scale_im - dc_im;
+        dst_re[8] = to_int16(psample[8]) * scale_re - dc_re;
+        dst_im[8] = to_int16(psample[9]) * scale_im - dc_im;
 
         // 5
-        dst_re[10] = (psample[10] & 0x3FFF) * scale_re - dc_re;
-        dst_im[10] = (psample[11] & 0x3FFF) * scale_im - dc_im;
+        dst_re[10] = to_int16(psample[10]) * scale_re - dc_re;
+        dst_im[10] = to_int16(psample[11]) * scale_im - dc_im;
 
         // 6
-        dst_re[12] = (psample[12] & 0x3FFF) * scale_re - dc_re;
-        dst_im[12] = (psample[13] & 0x3FFF) * scale_im - dc_im;
+        dst_re[12] = to_int16(psample[12]) * scale_re - dc_re;
+        dst_im[12] = to_int16(psample[13]) * scale_im - dc_im;
 
         // 7
-        dst_re[14] = (psample[14] & 0x3FFF) * scale_re - dc_re;
-        dst_im[14] = (psample[15] & 0x3FFF) * scale_im - dc_im;
+        dst_re[14] = to_int16(psample[14]) * scale_re - dc_re;
+        dst_im[14] = to_int16(psample[15]) * scale_im - dc_im;
 
         dst_re += 16;
         dst_im += 16;
@@ -1514,14 +1522,12 @@ void fobos_rx_proceed_calibration(struct fobos_dev_t * dev, void * data, uint32_
     for (size_t i = 0; i < complex_samples_count; i++)
     {
         int16_t re = *psample;
-        re &= 0x3FFF;
-        *dst_re = re;
+        *dst_re = to_int16(re);
         summ_re += re;
         dst_re += 2;
         psample++;
         int16_t im = *psample;
-        im &= 0x3FFF;
-        *dst_im = im;
+        *dst_im = to_int16(im);
         summ_im += im;
         dst_im += 2;
         psample++;

@@ -71,6 +71,7 @@
 #endif
 //==============================================================================
 static const float SAMPLE_NORM = (1.0 / (float)(SHRT_MAX >> 2)); // 14 bit ADC
+static const int16_t SAMPLE_OFFSET = (int16_t)(1<<13);
 //==============================================================================
 enum fobos_async_status
 {
@@ -126,12 +127,10 @@ struct fobos_dev_t
     uint16_t rffc500x_registers_remote[31];
 };
 //==============================================================================
-inline int16_t to_int16(int16_t value)
+static inline int16_t to_signed(int16_t offset_binary_value)
 {
-    int16_t result = value & (int16_t)0x3FFF;
-    result ^= (int16_t)(1<<13);
-    result <<= (int16_t)2;
-    return result >> (int16_t)2;
+    int16_t result = offset_binary_value & (int16_t)0x3FFF;
+    return result - SAMPLE_OFFSET;
 }
 //==============================================================================
 char * to_bin(uint16_t s16, char * str)
@@ -1459,41 +1458,41 @@ void fobos_rx_proceed_rx_buff(struct fobos_dev_t * dev, void * data, size_t size
     for (size_t i = 0; i < chunks_count; i++)
     {
         // 0
-        sample = to_int16(psample[0]) * scale_re;
+        sample = to_signed(psample[0]) * scale_re;
         dc_re += k * (sample - dc_re);
         dst_re[0] = sample - dc_re;
 
-        sample = to_int16(psample[1]) * scale_im;
+        sample = to_signed(psample[1]) * scale_im;
         dc_im += k * (sample - dc_im);
         dst_im[0] = sample - dc_im;
 
         // 1
-        dst_re[2] = to_int16(psample[2]) * scale_re - dc_re;
-        dst_im[2] = to_int16(psample[3]) * scale_im - dc_im;
+        dst_re[2] = to_signed(psample[2]) * scale_re - dc_re;
+        dst_im[2] = to_signed(psample[3]) * scale_im - dc_im;
 
         // 2
-        dst_re[4] = to_int16(psample[4]) * scale_re - dc_re;
-        dst_im[4] = to_int16(psample[5]) * scale_im - dc_im;
+        dst_re[4] = to_signed(psample[4]) * scale_re - dc_re;
+        dst_im[4] = to_signed(psample[5]) * scale_im - dc_im;
 
         // 3
-        dst_re[6] = to_int16(psample[6]) * scale_re - dc_re;
-        dst_im[6] = to_int16(psample[7]) * scale_im - dc_im;
+        dst_re[6] = to_signed(psample[6]) * scale_re - dc_re;
+        dst_im[6] = to_signed(psample[7]) * scale_im - dc_im;
 
         // 4
-        dst_re[8] = to_int16(psample[8]) * scale_re - dc_re;
-        dst_im[8] = to_int16(psample[9]) * scale_im - dc_im;
+        dst_re[8] = to_signed(psample[8]) * scale_re - dc_re;
+        dst_im[8] = to_signed(psample[9]) * scale_im - dc_im;
 
         // 5
-        dst_re[10] = to_int16(psample[10]) * scale_re - dc_re;
-        dst_im[10] = to_int16(psample[11]) * scale_im - dc_im;
+        dst_re[10] = to_signed(psample[10]) * scale_re - dc_re;
+        dst_im[10] = to_signed(psample[11]) * scale_im - dc_im;
 
         // 6
-        dst_re[12] = to_int16(psample[12]) * scale_re - dc_re;
-        dst_im[12] = to_int16(psample[13]) * scale_im - dc_im;
+        dst_re[12] = to_signed(psample[12]) * scale_re - dc_re;
+        dst_im[12] = to_signed(psample[13]) * scale_im - dc_im;
 
         // 7
-        dst_re[14] = to_int16(psample[14]) * scale_re - dc_re;
-        dst_im[14] = to_int16(psample[15]) * scale_im - dc_im;
+        dst_re[14] = to_signed(psample[14]) * scale_re - dc_re;
+        dst_im[14] = to_signed(psample[15]) * scale_im - dc_im;
 
         dst_re += 16;
         dst_im += 16;
@@ -1522,12 +1521,12 @@ void fobos_rx_proceed_calibration(struct fobos_dev_t * dev, void * data, uint32_
     for (size_t i = 0; i < complex_samples_count; i++)
     {
         int16_t re = *psample;
-        *dst_re = to_int16(re);
+        *dst_re = to_signed(re);
         summ_re += re;
         dst_re += 2;
         psample++;
         int16_t im = *psample;
-        *dst_im = to_int16(im);
+        *dst_im = to_signed(im);
         summ_im += im;
         dst_im += 2;
         psample++;
@@ -1853,7 +1852,7 @@ int fobos_rx_read_async(struct fobos_dev_t * dev, fobos_rx_cb_t cb, void *ctx, u
     dev->rx_cb = cb;
     dev->rx_cb_ctx = ctx;
     dev->rx_calibration_state = 0;
-    fobos_rx_set_calibration(dev, 1); // start calibration
+    fobos_rx_set_calibration(dev, 0); // start calibration
     if (buf_count == 0)
     {
         buf_count = FOBOS_DEF_BUF_COUNT;

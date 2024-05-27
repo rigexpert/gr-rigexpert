@@ -1852,7 +1852,7 @@ int fobos_rx_read_async(struct fobos_dev_t * dev, fobos_rx_cb_t cb, void *ctx, u
     dev->rx_cb = cb;
     dev->rx_cb_ctx = ctx;
     dev->rx_calibration_state = 0;
-    fobos_rx_set_calibration(dev, 0); // start calibration
+    fobos_rx_set_calibration(dev, 1); // start calibration
     if (buf_count == 0)
     {
         buf_count = FOBOS_DEF_BUF_COUNT;

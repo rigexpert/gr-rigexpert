@@ -7,7 +7,7 @@
 ########################################################################
 # Setup library
 ########################################################################
-include(GrPlatform) #define LIB_SUFFIX
+include(GNUInstallDirs)
 
 list(APPEND RigExpert_sources
     fobos_sdr_impl.cc
